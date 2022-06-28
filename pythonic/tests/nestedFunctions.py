@@ -5,4 +5,4 @@ def makeMultiplicateBy(num1):
 
 double = makeMultiplicateBy(2)
 
-print double(4)
+print(double(4))

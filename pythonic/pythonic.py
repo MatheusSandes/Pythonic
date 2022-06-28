@@ -24,7 +24,7 @@ def log(msg, level=0):
     if level < 0  or level > 3: level = 0
 
     if level >= LOG_LEVEL:
-        print color[level] + str(msg) + '\033[0m'
+        print(color[level] + str(msg) + '\033[0m')
         sys.stdout.flush()
 
 magicMethods_1 = ['__new__', '__del__', '__cmp__', '__eq__', '__ne__', '__lt__',
@@ -111,6 +111,7 @@ def _findOneToken(tokenToFind, code):
     whereFound = []
 
     for token in tokens:
+        print(token)
         lineNumber += _getNewLines(token)
         if _sameToken(token, tokenToFind):
             whereFound.append(lineNumber)
@@ -141,8 +142,8 @@ class PythonIdiom():
     def __str__(self):
         return '{Name:%s, where:%s}' % (self.name, str(self.where))
 
-    def addNew(self, line, author='', otherInfo={}):
-        dictSave = {"line": line, "author": author}
+    def addNew(self, line, otherInfo={}):
+        dictSave = {"line": line}
         for key in otherInfo:
             dictSave[key] = otherInfo[key]
         self.where.append(dictSave)
@@ -258,6 +259,24 @@ def findListCompr(code):
     log ("List comprehension found in lines: " + str(comprIdiom.getLines()))
     return comprIdiom
 
+def findDictCompr(code):
+    """
+    Look for list comprehension
+    Documentation: Python pocket reference page 38
+    """
+    comprIdiom = PythonIdiom('dictComprehension')
+    try:
+        tree = ast.parse(code)
+    except (SyntaxError, TypeError, ValueError):
+        log("Couldn't analyze dict comprehension", 2)
+        return comprIdiom
+    print(ast.walk(tree))
+    dictComps = [node for node in ast.walk(tree) if type(node) is ast.DictComp()]
+
+    for compr in dictComps:
+        comprIdiom.addNew(compr.lineno)
+    log ("List comprehension found in lines: " + str(comprIdiom.getLines()))
+    return comprIdiom
 
 def findGenerators(code):
     """
@@ -499,7 +518,7 @@ def findUpdateVariables1Line(code):
 
     for ttype, word in tokens:
         if not _ignoreStr(word):
-            actualLine += word.encode('utf-8')
+            actualLine = actualLine + str(word.encode('utf-8'))
         lineNumber += _getNewLines((ttype, word))
         if _sameToken((ttype, word), newLineToken):
             beforeEqual = True
@@ -526,7 +545,7 @@ def findUpdateVariables1Line(code):
             if _sameToken((ttype, word), nameToken) and (numCommas == numVarPrevEqual):
                 numVarPrevEqual += 1
         else:
-            if re.match('\w+', word.encode('utf-8')) and (numCommas == numVarPostEqual):
+            if re.match('\w+', str(word.encode('utf-8'))) and (numCommas == numVarPostEqual):
                 numVarPostEqual += 1
     log("Update in 1 line. Found: " + str(linesFound))
     log("Update in 1 line found in lines " + str(assignIdiom.getLines()))
@@ -547,6 +566,119 @@ def findDeque(code):
     log("deque found in lines {0}".format(dequeIdiom.getLines()))
     return dequeIdiom
 
+def findCounter(code):
+    """
+
+    """
+    CounterToken = (Token.Name, '^Counter$')
+    CounterIdiom = PythonIdiom('Counter')
+    for lineFound in _findOneToken(CounterToken, code):
+        print(lineFound)
+        CounterIdiom.addNew(lineFound)
+    log("Counter found in lines {0}".format(CounterIdiom.getLines()))
+    return CounterIdiom
+
+def findEnumerate(code):
+    """
+
+    """
+    EnumerateToken = (Token.Name.Builtin, '^enumerate$')
+    EnumerateIdiom = PythonIdiom('Enumerate')
+    for lineFound in _findOneToken(EnumerateToken, code):
+        print(lineFound)
+        EnumerateIdiom.addNew(lineFound)
+    log("Enumerate found in lines {0}".format(EnumerateIdiom.getLines()))
+    return EnumerateIdiom
+
+def findClassmethod(code):
+    """
+
+    """
+    ClassmethodToken = (Token.Name.Decorator, '^@classmethod$')
+    ClassmethodIdiom = PythonIdiom('Classmethod')
+    for lineFound in _findOneToken(ClassmethodToken, code):
+        print(lineFound)
+        ClassmethodIdiom.addNew(lineFound)
+    log("Classmethod found in lines {0}".format(ClassmethodIdiom.getLines()))
+    return ClassmethodIdiom
+
+def findStaticmethod(code):
+    """
+
+    """
+    StaticmethodToken = (Token.Name.Decorator, '^@staticmethod$')
+    StaticmethodIdiom = PythonIdiom('Staticmethod')
+    for lineFound in _findOneToken(StaticmethodToken, code):
+        print(lineFound)
+        StaticmethodIdiom.addNew(lineFound)
+    log("Staticmethod found in lines {0}".format(StaticmethodIdiom.getLines()))
+    return StaticmethodIdiom
+
+def findZip(code):
+    """
+
+    """
+    zipToken = (Token.Name.Builtin, '^zip$')
+    defzipIdiom = PythonIdiom('zip')
+    for lineFound in _findOneToken(zipToken, code):
+        defzipIdiom.addNew(lineFound)
+    log("zip found in lines {0}".format(defzipIdiom.getLines()))
+    return defzipIdiom
+
+def findItertools(code):
+    """
+
+    """
+    ItertoolsToken = (Token.Name, '^itertools$')
+    defItertoolsIdiom = PythonIdiom('Itertools')
+    for lineFound in _findOneToken(ItertoolsToken, code):
+        defItertoolsIdiom.addNew(lineFound)
+    log("Itertools found in lines {0}".format(defItertoolsIdiom.getLines()))
+    return defItertoolsIdiom
+
+def findtotalOrdering(code):
+    """
+
+    """
+    totalOrderingToken = (Token.Name.Decorator, '^@total_ordering$')
+    deftotalOrderingIdiom = PythonIdiom('totalOrdering')
+    for lineFound in _findOneToken(totalOrderingToken, code):
+        deftotalOrderingIdiom.addNew(lineFound)
+    log("totalOrdering found in lines {0}".format(deftotalOrderingIdiom.getLines()))
+    return deftotalOrderingIdiom
+
+def findHeapq(code):
+    """
+
+    """
+    heapqToken = (Token.Name, '^heapq$')
+    defheapqIdiom = PythonIdiom('heapq')
+    for lineFound in _findOneToken(heapqToken, code):
+        defheapqIdiom.addNew(lineFound)
+    log("heapq found in lines {0}".format(defheapqIdiom.getLines()))
+    return defheapqIdiom
+
+def findProperty(code):
+    """
+
+    """
+    PropertyToken = (Token.Name.Decorator, '^@property$')
+    defPropertyIdiom = PythonIdiom('Property')
+    for lineFound in _findOneToken(PropertyToken, code):
+        defPropertyIdiom.addNew(lineFound)
+    log("Property found in lines {0}".format(defPropertyIdiom.getLines()))
+    return defPropertyIdiom
+
+def findPprint(code):
+    """
+
+    """
+    PprintToken = (Token.Name, '^pprint$')
+    defPprintIdiom = PythonIdiom('Pprint')
+    for lineFound in _findOneToken(PprintToken, code):
+        defPprintIdiom.addNew(lineFound)
+    log("Pprint found in lines {0}".format(defPprintIdiom.getLines()))
+    return defPprintIdiom
 
 def findDefaultDict(code):
     """
@@ -733,38 +865,6 @@ def findUseMapFilterReduce(code):
     log('reduce found in lines: ' + str(reduceIdiom.getLines()))
     return [mapIdiom, filterIdiom, reduceIdiom]
 
-
-def getAuthor(blameData, line):
-    matched = re.search('\w+\s+\(<(.+@.+\..+)>\s+\d+\-\d+\-\d+ \d+\:\d+\:\d+ [\+\-]\d+\s+'+str(line)+'\)', blameData)
-
-    if matched:
-        email = matched.groups()[0] # email
-    else:
-        log("Email not found in line number {0}".format(str(line)), 3)
-        email = ''
-    return email
-
-
-def getGitBlame(filepath):
-    """
-    Guiven a file from a git project, return the tuple (data, error)
-    """
-    currentDir = os.getcwd()
-    fileName = filepath.split('/')[-1]
-    fileLocation = '/'.join(filepath.split('/')[:-1])
-    if fileLocation:
-        os.chdir(fileLocation)
-
-    command = 'git blame -e'.split(' ')
-    command.append(fileName)
-    proc = subprocess.Popen(command,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE);
-    (data, error) = proc.communicate()
-    os.chdir(currentDir)
-    return (data, error)
-
-
 def completeAnalysis(filepath):
     with open(filepath, 'rt') as file:
         code = file.read()
@@ -779,6 +879,7 @@ def completeAnalysis(filepath):
     results.append(findMain(code))
     results.append(findDecorators(code))
     results.append(findListCompr(code))
+    results.append(findDictCompr(code))
     results.append(findGenerators(code))
     results.append(findCallFunctEqual(code))
     results.append(findNamedtuple(code))
@@ -791,56 +892,35 @@ def completeAnalysis(filepath):
     results.append(findFinally(code))
     results.append(findDocstring(code))
     results.append(findDeque(code))
+    results.append(findCounter(code))
+    results.append(findEnumerate(code))
+    results.append(findClassmethod(code))
+    results.append(findStaticmethod(code))
+    results.append(findZip(code))
+    results.append(findItertools(code))
+    results.append(findtotalOrdering(code))
+    results.append(findHeapq(code))
+    results.append(findProperty(code))
+    results.append(findPprint(code))
     results.append(findDefaultDict(code))
     results.append(findOrderedDict(code))
 
     # Anti-idioms
-    resultsAnti.append(findLargeTry(code))
-    resultsAnti.append(checkBadLoopCollect(code))
-    resultsAnti.append(checkNotRange(code))
-    resultsAnti.append(findBadUseImport(code))
+    results.append(findLargeTry(code))
+    results.append(checkBadLoopCollect(code))
+    results.append(checkNotRange(code))
+    results.append(findBadUseImport(code))
     mapFiltReducDict = findUseMapFilterReduce(code)
     for antiIdiom in mapFiltReducDict:
-        resultsAnti.append(antiIdiom)
-
-    # get the info of who writes the lines
-    # I do this at the end because of performance issues
-    print "Doing git blame..."
-    data, error = getGitBlame(filepath)
-    if error:
-        log('git blame error:' + error, 3)
-    elif data:
-        print "lines: %d" % len(data.splitlines())
-        numresults = 0
-        for idiom in results:
-            for one_idiom in idiom.where:
-                one_idiom["author"] = getAuthor(data, one_idiom["line"])
-                numresults += 1
-                print "\r" + str(numresults),
-                sys.stdout.flush()
-
-        for anti_idiom in resultsAnti:
-            for one_anti_idiom in anti_idiom.where:
-                one_anti_idiom["author"] = getAuthor(data, one_anti_idiom["line"])
-                numresults += 1
-                print "\r" + str(numresults),
-                sys.stdout.flush()
-
-    return (results, resultsAnti)
+        results.append(antiIdiom)
+    return (results)
 
 
 def _main():
-    (idioms, anti_idioms) = completeAnalysis(sys.argv[1])
+    idioms = completeAnalysis("pythonic/tests/listComprehension.py")
     log ("*------*------* IDIOMS *------*------*")
     for idiom in idioms:
-        log(idiom, 1)
-    log ("*------*------* ANTI-IDIOMS *------*------*")
-    for anti_idiom in anti_idioms:
-        log(anti_idiom, 1)
-
+        print(idiom)
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        sys.exit("Usage: python pythonic.py python_file")
-
     _main()

@@ -6,4 +6,4 @@ def createSquares(untilNum):
 squaresUntil10 = createSquares(10)
 
 for i in squaresUntil10:
-    print i
+    print(i)

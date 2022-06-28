@@ -7,8 +7,8 @@ Point = namedtuple('Point', 'x y')
 point1 = Point(2, 3)
 point2 = Point(5, 7)
 
-print point1
-print point2
+print(point1)
+print(point2)
 
 deq = deque()
 ddict = defaultdict()

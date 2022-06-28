@@ -1,3 +1,4 @@
-squaredNumbers = (x*x for x in xrange(100))
-for number in squaredNumbers:
-    print number
+colors = ['black', 'white']
+sizes = ['S', 'M', 'L']
+for tshirt in ('%s %s' % (c, s) for c in colors for s in sizes):
+    print(tshirt)
