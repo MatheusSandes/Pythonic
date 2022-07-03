@@ -219,13 +219,13 @@ def findMain(code):
     tokens_2 = pygments.lex(code, lexer)
     
     sequence_1 = [(Token.Keyword, '^if$'),
-                (Token.Name, '^__name__$'),
+                (Token.Name.Variable.Magic, '^__name__$'),
                 (Token.Operator, '^==$'),
                 (Token.Literal.String.Double, '^__main__$'),
                 (Token.Punctuation, '^:$')]
 
     sequence_2 = [(Token.Keyword, '^if$'),
-                (Token.Name, '^__name__$'),
+                (Token.Name.Variable.Magic, '^__name__$'),
                 (Token.Operator, '^==$'),
                 (Token.Literal.String.Single, '^__main__$'),
                 (Token.Punctuation, '^:$')]
@@ -271,7 +271,7 @@ def findDictCompr(code):
         log("Couldn't analyze dict comprehension", 2)
         return comprIdiom
     print(ast.walk(tree))
-    dictComps = [node for node in ast.walk(tree) if type(node) is ast.DictComp()]
+    dictComps = [node for node in ast.walk(tree) if type(node) is ast.DictComp]
 
     for compr in dictComps:
         comprIdiom.addNew(compr.lineno)
@@ -680,6 +680,42 @@ def findPprint(code):
     log("Pprint found in lines {0}".format(defPprintIdiom.getLines()))
     return defPprintIdiom
 
+def findFormat(code):
+    """
+
+    """
+    FormatToken = (Token.Name, '^format$')
+    defFormatIdiom = PythonIdiom('Format')
+    for lineFound in _findOneToken(FormatToken, code):
+        defFormatIdiom.addNew(lineFound)
+    log("Format found in lines {0}".format(defFormatIdiom.getLines()))
+    return defFormatIdiom
+
+def findJoin(code):
+    """
+
+    """
+    JoinToken = (Token.Name, '^join$')
+    defJoinIdiom = PythonIdiom('Join')
+    for lineFound in _findOneToken(JoinToken, code):
+        defJoinIdiom.addNew(lineFound)
+    log("Join found in lines {0}".format(defJoinIdiom.getLines()))
+    return defJoinIdiom
+
+def findStrRepr(code):
+    """
+
+    """
+    StrToken = (Token.Name.Function.Magic, '^__str__$')
+    ReprToken = (Token.Name.Function.Magic, '^__repr__$')
+    defStrReprIdiom = PythonIdiom('__str__ and __repr__')
+    for lineFound in _findOneToken(StrToken, code):
+        defStrReprIdiom.addNew(lineFound)
+    for lineFound in _findOneToken(ReprToken, code):
+        defStrReprIdiom.addNew(lineFound)
+    log("StrRepr found in lines {0}".format(defStrReprIdiom.getLines()))
+    return defStrReprIdiom
+
 def findDefaultDict(code):
     """
     Find the use of default dict in the code
@@ -902,6 +938,9 @@ def completeAnalysis(filepath):
     results.append(findHeapq(code))
     results.append(findProperty(code))
     results.append(findPprint(code))
+    results.append(findFormat(code))
+    results.append(findJoin(code))
+    results.append(findStrRepr(code))
     results.append(findDefaultDict(code))
     results.append(findOrderedDict(code))
 
