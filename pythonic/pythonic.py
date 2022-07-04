@@ -111,7 +111,6 @@ def _findOneToken(tokenToFind, code):
     whereFound = []
 
     for token in tokens:
-        print(token)
         lineNumber += _getNewLines(token)
         if _sameToken(token, tokenToFind):
             whereFound.append(lineNumber)
@@ -956,10 +955,13 @@ def completeAnalysis(filepath):
 
 
 def _main():
-    idioms = completeAnalysis("pythonic/tests/listComprehension.py")
+    idioms = completeAnalysis(sys.argv[1])
     log ("*------*------* IDIOMS *------*------*")
     for idiom in idioms:
         print(idiom)
 
 if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        sys.exit("Usage: python pythonic.py python_file")
+
     _main()
