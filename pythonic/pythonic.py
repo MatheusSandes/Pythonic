@@ -24,7 +24,7 @@ def log(msg, level=0):
     if level < 0  or level > 3: level = 0
 
     if level >= LOG_LEVEL:
-        print(color[level] + str(msg) + '\033[0m')
+        #print(color[level] + str(msg) + '\033[0m')
         sys.stdout.flush()
 
 magicMethods_1 = ['__new__', '__del__', '__cmp__', '__eq__', '__ne__', '__lt__',
@@ -269,7 +269,7 @@ def findDictCompr(code):
     except (SyntaxError, TypeError, ValueError):
         log("Couldn't analyze dict comprehension", 2)
         return comprIdiom
-    print(ast.walk(tree))
+    #print(ast.walk(tree))
     dictComps = [node for node in ast.walk(tree) if type(node) is ast.DictComp]
 
     for compr in dictComps:
@@ -572,7 +572,7 @@ def findCounter(code):
     CounterToken = (Token.Name, '^Counter$')
     CounterIdiom = PythonIdiom('Counter')
     for lineFound in _findOneToken(CounterToken, code):
-        print(lineFound)
+        #print(lineFound)
         CounterIdiom.addNew(lineFound)
     log("Counter found in lines {0}".format(CounterIdiom.getLines()))
     return CounterIdiom
@@ -584,7 +584,7 @@ def findEnumerate(code):
     EnumerateToken = (Token.Name.Builtin, '^enumerate$')
     EnumerateIdiom = PythonIdiom('Enumerate')
     for lineFound in _findOneToken(EnumerateToken, code):
-        print(lineFound)
+        #print(lineFound)
         EnumerateIdiom.addNew(lineFound)
     log("Enumerate found in lines {0}".format(EnumerateIdiom.getLines()))
     return EnumerateIdiom
@@ -596,7 +596,7 @@ def findClassmethod(code):
     ClassmethodToken = (Token.Name.Decorator, '^@classmethod$')
     ClassmethodIdiom = PythonIdiom('Classmethod')
     for lineFound in _findOneToken(ClassmethodToken, code):
-        print(lineFound)
+        #print(lineFound)
         ClassmethodIdiom.addNew(lineFound)
     log("Classmethod found in lines {0}".format(ClassmethodIdiom.getLines()))
     return ClassmethodIdiom
@@ -608,7 +608,7 @@ def findStaticmethod(code):
     StaticmethodToken = (Token.Name.Decorator, '^@staticmethod$')
     StaticmethodIdiom = PythonIdiom('Staticmethod')
     for lineFound in _findOneToken(StaticmethodToken, code):
-        print(lineFound)
+        #print(lineFound)
         StaticmethodIdiom.addNew(lineFound)
     log("Staticmethod found in lines {0}".format(StaticmethodIdiom.getLines()))
     return StaticmethodIdiom
@@ -944,13 +944,13 @@ def completeAnalysis(filepath):
     results.append(findOrderedDict(code))
 
     # Anti-idioms
-    results.append(findLargeTry(code))
-    results.append(checkBadLoopCollect(code))
-    results.append(checkNotRange(code))
-    results.append(findBadUseImport(code))
-    mapFiltReducDict = findUseMapFilterReduce(code)
-    for antiIdiom in mapFiltReducDict:
-        results.append(antiIdiom)
+    # results.append(findLargeTry(code))
+    # results.append(checkBadLoopCollect(code))
+    # results.append(checkNotRange(code))
+    # results.append(findBadUseImport(code))
+    # mapFiltReducDict = findUseMapFilterReduce(code)
+    # for antiIdiom in mapFiltReducDict:
+    #   results.append(antiIdiom)
     return (results)
 
 
