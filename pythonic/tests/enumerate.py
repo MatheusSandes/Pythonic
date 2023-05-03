@@ -1,15 +1,15 @@
 
 # Python program to illustrate
 # enumerate function
-l1 = ["eat", "sleep", "repeat"]
-s1 = "geek"
+list1 = ["eat", "sleep", "repeat"]
+string1 = "geek"
  
 # creating enumerate objects
-obj1 = enumerate(l1)
-obj2 = enumerate(s1)
+obj1 = enumerate(list1)
+obj2 = enumerate(string1)
  
 print ("Return type:", type(obj1))
-print (list(enumerate(l1)))
+print (list(enumerate(list1)))
  
 # changing start index to 2 from 0
-print (list(enumerate(s1, 2)))
+print (list(enumerate(string1, 2)))

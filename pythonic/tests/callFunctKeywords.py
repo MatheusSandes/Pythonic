@@ -1,6 +1,4 @@
 def foo(bar):
-    print bar
-
-foo( "hello", bar="hi" )
+    print(bar)
 
 foo( bar="hi" )

@@ -1,4 +1,4 @@
-colors = ['a', 'b', 'c']
+words = ['abc', 'dfg', 'hij']
 
-for i in range(len(colors)):
-    print color[i]
+for i in range(len(words)):
+    print words[i]

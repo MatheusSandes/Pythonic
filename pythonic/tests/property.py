@@ -1,19 +1,19 @@
 class Casa:
     
-	def __init__(self, preco):
-		self._preco = preco
+	def __init__(self, price):
+		self._price = price
 
 	@property
-	def preco(self):
-		return self._preco
+	def price(self):
+		return self._price
 	
-	@preco.setter
-	def preco(self, new_price):
-		if novo_preco > 0 and isinstance(novo_preco, float):
-			self._preco = novo_preco
+	@price.setter
+	def price(self, new_price):
+		if new_price > 0 and isinstance(new_price, float):
+			self._price = new_price
 		else:
-			print("Insira um preço válido")
+			print("Insert a new valid price")
 
-	@preco.deleter
-	def preco(self):
-		del self._preco
+	@price.deleter
+	def price(self):
+		del self._price

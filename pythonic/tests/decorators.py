@@ -4,17 +4,17 @@
 
 class my_decorator(object):
 
-    def __init__(self, f):
-        print("inside my_decorator.__init__()")
-        f() # Prove that function definition has completed
+    def __init__(self, fun):
+        print("my_decorator.__init__()")
+        fun()
 
     def __call__(self):
-        print("inside my_decorator.__call__()")
+        print("my_decorator.__call__()")
 
 @my_decorator
-def aFunction():
-    print("inside aFunction()")
+def testFunction():
+    print("inside testFunction()")
 
 print("Finished decorating aFunction()")
 
-aFunction()
+testFunction()

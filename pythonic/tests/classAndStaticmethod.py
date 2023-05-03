@@ -19,11 +19,11 @@ class Person:
     def isAdult(age):
         return age > 18
   
-person1 = Person('mayank', 21)
-person2 = Person.fromBirthYear('mayank', 1996)
+p1 = Person('Matheus', 21)
+p2 = Person.fromBirthYear('Matheus', 1996)
   
-print(person1.age)
-print(person2.age)
+print(p1.age)
+print(p2.age)
   
 # print the result
 print(Person.isAdult(22))

@@ -1,5 +1,5 @@
 class magicMethods():
     def __init__():
         pass
-    def __str__():
+    def __add__():
         pass

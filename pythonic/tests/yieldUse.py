@@ -1,9 +1,9 @@
-def createSquares(untilNum):
-    list = range(untilNum+1)
+def createSquare(until):
+    list = range(until+1)
     for i in list:
         yield i**2
 
-squaresUntil10 = createSquares(10)
+sqrntil10 = createSquare(10)
 
-for i in squaresUntil10:
+for i in sqrUntil10:
     print(i)

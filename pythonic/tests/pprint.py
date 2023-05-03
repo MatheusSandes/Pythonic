@@ -8,7 +8,7 @@ def geocode(address):
     return resp.json()
  
 # calling geocode function
-data = geocode('India gate')
+data = geocode('Brazil gate')
  
 # pretty-printing json response
 pprint(data)

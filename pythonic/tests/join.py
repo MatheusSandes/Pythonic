@@ -1,4 +1,4 @@
-myTuple = ("John", "Peter", "Vicky")
+myTuple = ("Matheus", "Peter", "Paulo")
 
 x = "#".join(myTuple)
 
